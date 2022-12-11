@@ -1,3 +1,13 @@
+//const timeout = 10 * time.Millisecond
+//ctx, cancel := context.WithTimeout(context.TODO(), timeout)
+//defer cancel() // important to avoid a resource leak
+//var r net.Resolver
+//names, err := r.LookupAddr(ctx, "127.0.0.1")
+//if err == nil && len(names) > 0 {
+//    fmt.Println(names[0]) // "localhost"
+//}
+
+
 package main
 
 import (
