@@ -6,6 +6,7 @@ import (
         "os"
         "time"
         "strings"
+         _"log"
         "strconv"
         "context"
 )
@@ -14,21 +15,24 @@ var host string = ""
 
 func lookUp(host string) bool {
    start := time.Now()
-   ctx, cancel := context.WithTimeout(context.TODO(), 1*time.Millisecond)
+   ctx, cancel := context.WithTimeout(context.TODO(), 5*time.Millisecond)
+   //if cancel != nil {
+    //  fmt.Println("cancel")
+   // }
    //ips, err := net.LookupIP(host)
    defer cancel() // important to avoid a resource leak
    var r net.Resolver
    ips, err := r.LookupIP(ctx, "ip4",host)
    if err != nil {
-      fmt.Fprintf(os.Stderr, "Could not get IPs: %v\n", err)
+      fmt.Fprintf(os.Stderr, "->Could not get IPs: %v\n", err)
       //os.Exit(1)
-      f, err := os.OpenFile("dnsreq.log", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
-      if err != nil {
+      f, ferr := os.OpenFile("dnsreq.log", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+      if ferr != nil {
          fmt.Println(err)
       }
       defer f.Close()
       timeString := start.Format("2006-01-02 15:04:05")
-      str := []string{timeString, " ", host, "\n"}
+      str := []string{timeString, " ", host, " ", err.Error(),  "\n"}
       if _, err := f.WriteString(strings.Join(str,"")); err != nil {
           fmt.Println(err)
       }
